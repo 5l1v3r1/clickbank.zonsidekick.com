@@ -49,6 +49,3 @@ $ workon clickbank.zonsidekick.com
 $ python manager.py assets_
 $ deactivate
 ```
-
-Others
-======
