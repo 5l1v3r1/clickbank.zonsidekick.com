@@ -1,0 +1,26 @@
+{% extends 'administrators/layout.html' %}
+
+{% set title = 'Dashboard' %}
+
+{% block component %}
+    <div class="row">
+        <div class="col-lg-12 col-md-12">
+            <div class="page-header">
+                <h1>
+                    <i class="fa fa-fw fa-map-marker"></i>
+                    {{ title }}
+                </h1>
+            </div>
+            <table class="table table-hover table-striped">
+                <tr>
+                    <td>Customers</td>
+                    <td class="narrow text-right">{{ customers }}</td>
+                </tr>
+                <tr>
+                    <td>Orders</td>
+                    <td class="narrow text-right">{{ orders }}</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+{% endblock %}

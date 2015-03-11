@@ -1,0 +1,120 @@
+{% extends 'administrators/layout.html' %}
+
+{% set navbar = 'orders' %}
+{% set title = 'Orders - Overview' %}
+
+{% block component %}
+    <div class="row">
+        <div class="col-lg-12 col-md-12">
+            <div class="page-header">
+                <h1>
+                    <i class="fa fa-fw fa-map-marker"></i>
+                    {{ title }}
+                </h1>
+            </div>
+            {% if orders %}
+                {{ macros.pagination({
+                    'name': 'administrators.orders_process',
+                    'options': {},
+                }, pager) }}
+                <table class="table table-hover table-striped">
+                    <tr>
+                        {{ macros.th(
+                            {
+                                'name': 'administrators.orders_process',
+                                'options': {},
+                            },
+                            order_by,
+                            'orders.id',
+                            'ID',
+                            'narrow text-center'
+                        ) }}
+                        <th class="narrow">Type</th>
+                        <th class="narrow">Currency</th>
+                        <th class="narrow">Payment Method</th>
+                        <th class="narrow text-center">Amount</th>
+                        <th class="actions narrow">Actions</th>
+                    </tr>
+                    {% for order in orders %}
+                        <tr>
+                            <td class="narrow text-center">
+                                {{ order.id }}
+                            </td>
+                            <td>{{ order.type }}</td>
+                            <td>{{ order.currency }}</td>
+                            <td>{{ order.payment_method }}</td>
+                            <td class="narrow text-center">
+                                {{ order.amounts_account|format_float }}
+                            </td>
+                            <td class="actions narrow">
+                                <a
+                                    class="btn btn-xs btn-danger"
+                                    href="{{ url_for(
+                                        'administrators.orders_overview'
+                                    ) }}"
+                                    >
+                                    <i class="fa fa-fw fa-undo"></i>
+                                    Refund
+                                </a>
+                                <a
+                                    class="btn btn-xs btn-danger"
+                                    href="{{ url_for(
+                                        'administrators.orders_overview'
+                                    ) }}"
+                                    >
+                                    <i class="fa fa-fw fa-times">
+                                    </i>
+                                    Cancel
+                                </a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </table>
+                {{ macros.pagination({'name': 'administrators.orders_process', 'options': {}}, pager) }}
+            {% else %}
+                <div class="alert alert-danger">
+                    <i class="fa fa-fw fa-exclamation-triangle"></i>
+                    There are no orders in the database.
+                </div>
+            {% endif %}
+            <hr>
+            <div class="page-header">
+                <h1>
+                    <i class="fa fa-fw fa-map-marker"></i>
+                    Filters
+                </h1>
+            </div>
+            <form
+                action="{{ url_for('administrators.orders_process') }}"
+                class="form-horizontal"
+                method="post"
+                >
+                {{ macros.form(form) }}
+                <div class="form-group">
+                    <div
+                        class="col-lg-offset-2 col-lg-10 col-md-offset-2 col-md-10"
+                        >
+                        <button
+                            class="btn btn-success"
+                            name="submit"
+                            type="submit"
+                            value="set"
+                            >
+                            <i class="fa fa-fw fa-dot-circle-o"></i>
+                            Set
+                        </button>
+                        <button
+                            class="btn btn-danger"
+                            name="submit"
+                            type="submit"
+                            value="unset"
+                            >
+                            <i class="fa fa-fw fa-circle-o"></i>
+                            Unset
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}
