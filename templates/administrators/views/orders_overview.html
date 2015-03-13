@@ -30,9 +30,11 @@
                             'narrow text-center'
                         ) }}
                         <th class="narrow">Type</th>
+                        <th class="narrow">Vendor</th>
                         <th class="narrow">Currency</th>
                         <th class="narrow">Payment Method</th>
                         <th class="narrow text-center">Amount</th>
+                        <th class="narrow">Receipt</th>
                         <th class="actions narrow">Actions</th>
                     </tr>
                     {% for order in orders %}
@@ -40,12 +42,14 @@
                             <td class="narrow text-center">
                                 {{ order.id }}
                             </td>
-                            <td>{{ order.type }}</td>
-                            <td>{{ order.currency }}</td>
-                            <td>{{ order.payment_method }}</td>
+                            <td class="narrow">{{ order.type }}</td>
+                            <td class="narrow">{{ order.vendor }}</td>
+                            <td class="narrow">{{ order.currency }}</td>
+                            <td class="narrow">{{ order.payment_method }}</td>
                             <td class="narrow text-center">
                                 {{ order.amounts_account|format_float }}
                             </td>
+                            <td class="narrow">{{ order.receipt }}</td>
                             <td class="actions narrow">
                                 <a
                                     class="btn btn-xs btn-danger"
