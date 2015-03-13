@@ -36,6 +36,7 @@
                             <th class="narrow">Email</th>
                             <th class="narrow">First Name</th>
                             <th class="narrow">Last Name</th>
+                            <th class="narrow">Full Name</th>
                         </tr>
                         {% for customer in customers %}
                             <tr>
@@ -45,6 +46,7 @@
                                 <td>{{ customer.email }}</td>
                                 <td>{{ customer.first_name }}</td>
                                 <td>{{ customer.last_name }}</td>
+                                <td>{{ customer.full_name }}</td>
                             </tr>
                         {% endfor %}
                     </table>
