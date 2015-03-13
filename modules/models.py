@@ -1,8 +1,5 @@
 # -*- coding: utf-8 -*-
 
-from datetime import datetime
-
-from flask import g
 from sqlalchemy.orm import backref, relationship
 
 from modules import database
