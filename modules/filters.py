@@ -16,6 +16,9 @@ class customers(Form):
     last_name = TextField(label='Last Name', validators=[
         validators.required(),
     ])
+    full_name = TextField(label='Full Name', validators=[
+        validators.required(),
+    ])
 
     def apply(self, query):
         if self.email.data:
@@ -30,6 +33,10 @@ class customers(Form):
             query = query.filter(models.customer.last_name.like('%%%(last_name)s%%' % {
                 'last_name': self.last_name.data,
             }))
+        if self.full_name.data:
+            query = query.filter(models.customer.full_name.like('%%%(full_name)s%%' % {
+                'full_name': self.full_name.data,
+            }))
         return query
 
 
@@ -37,10 +44,17 @@ class orders(Form):
     type = TextField(label='Type', validators=[
         validators.required(),
     ])
+    receipt = TextField(validators=[
+        validators.required(),
+    ])
 
     def apply(self, query):
         if self.type.data:
             query = query.filter(models.order.type.like('%%%(type)s%%' % {
                 'type': self.type.data,
+            }))
+        if self.receipt.data:
+            query = query.filter(models.order.receipt.like('%%%(receipt)s%%' % {
+                'receipt': self.receipt.data,
             }))
         return query
