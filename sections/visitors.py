@@ -20,13 +20,13 @@ def dashboard():
 @blueprint.route('/instant-notification', methods=['POST'])
 def instant_notification():
     message = loads(request.data)
-    iv = message['iv']
-    encrypted_string = message['notification']
     sha1_ = sha1()
     sha1_.update(CLICKBANK_SECRET_KEY)
-    cipher = AES.new(sha1_.hexdigest()[:32], AES.MODE_CBC, iv.decode('base64'))
+    cipher = AES.new(
+        sha1_.hexdigest()[:32], AES.MODE_CBC, message['iv'].decode('base64')
+    )
     decrypted_string = cipher.decrypt(
-        encrypted_string.decode('base64')
+        message['notification'].decode('base64')
     ).strip()
     decrypted_string = loads(''.join([
         character for character in decrypted_string if ord(character) >= 32
@@ -68,4 +68,4 @@ def instant_notification():
         'last_name': decrypted_string['customer']['billing']['lastName'],
     }))
     g.mysql.commit()
-    return '200'
+    return ('', 204)
