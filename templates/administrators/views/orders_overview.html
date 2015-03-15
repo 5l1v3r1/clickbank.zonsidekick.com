@@ -45,7 +45,7 @@
                             <td class="narrow">{{ order.type }}</td>
                             <td class="narrow">{{ order.role }} ( {{ order.get_role() }})</td>
                             <td class="narrow">{{ order.payment_method }}</td>
-                            <td class="narrow text-center">{{ order.amounts_account|format_float }} {{ order.currency }}</td>
+                            <td class="narrow text-center">{{ order.amounts_order|format_float }} {{ order.currency }}</td>
                         </tr>
                     {% endfor %}
                 </table>

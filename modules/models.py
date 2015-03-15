@@ -83,6 +83,8 @@ class customer(database.base):
 
     address = Column(mutators_dict.as_mutable(json))
 
+    def get_amount(self):
+        return sum([order.amounts_order for order in customer.orders.order_by('timestamp DESC').all()])
 
 class order(database.base):
 

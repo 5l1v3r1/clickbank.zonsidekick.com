@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 
+from flask import g
 from flask_wtf import Form
-from wtforms.fields import TextField
+from wtforms.fields import SelectField, TextField
 
 from modules import models
 
@@ -31,12 +32,19 @@ class customers(Form):
 
 
 class orders(Form):
+    customer = SelectField(choices=[], default='')
     receipt = TextField()
     type = TextField()
     role = TextField()
     affiliate = TextField()
     payment_method = TextField(label='Payment Method')
     vendor = TextField()
+
+    def __init__(self, *args, **kwargs):
+        super(orders, self).__init__(*args, **kwargs)
+        self.customer.choices = [('', 'All')] + [
+            (customer.id, customer.name) for customer in g.mysql.query(models.customer).order_by('full_name asc').all()
+        ]
 
     def apply(self, query):
         if self.receipt.data:

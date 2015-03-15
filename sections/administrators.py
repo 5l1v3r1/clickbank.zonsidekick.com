@@ -68,7 +68,7 @@ def customers_overview():
         'customers',
         {},
         {
-            'column': 'customers.id',
+            'column': 'full_name',
             'direction': 'asc',
         },
         10,
@@ -103,8 +103,8 @@ def orders_overview():
         'orders',
         {},
         {
-            'column': 'orders.id',
-            'direction': 'asc',
+            'column': 'timestamp',
+            'direction': 'desc',
         },
         10,
         1

@@ -32,6 +32,7 @@
                             <th>Email</th>
                             <th class="narrow">Full Name</th>
                             <th class="narrow text-right">Orders</th>
+                            <th class="narrow text-right">Money Spent</th>
                         </tr>
                         {% for customer in customers %}
                             <tr>
@@ -39,6 +40,7 @@
                                 <td>{{ customer.email }}</td>
                                 <td class="narrow">{{ customer.full_name }}</td>
                                 <td class="narrow text-right">{{ customer.orders.count()|format_integer }}</td>
+                                <td class="narrow text-right">{{ customer.get_amount()|format_float }}</td>
                             </tr>
                         {% endfor %}
                     </table>
