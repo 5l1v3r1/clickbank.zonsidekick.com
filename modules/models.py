@@ -86,6 +86,7 @@ class customer(database.base):
     def get_amount(self):
         return sum([order.amounts_order for order in customer.orders.order_by('timestamp DESC').all()])
 
+
 class order(database.base):
 
     __tablename__ = 'orders'

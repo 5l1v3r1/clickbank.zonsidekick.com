@@ -26,3 +26,10 @@ SQLALCHEMY = 'mysql+mysqldb://%(username)s:%(password)s@%(hostname)s/%(database)
     'password': '...',
     'username': '...',
 }
+
+# Rollbar
+
+ROLLBAR = {
+    'access_token': '...',
+    'environment': '...',
+}

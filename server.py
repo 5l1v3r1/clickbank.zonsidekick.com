@@ -1,10 +1,12 @@
 # -*- coding: utf-8 -*-
 
 from datetime import datetime
-from os.path import abspath, dirname, join
+from os.path import abspath, dirname, join, realpath
 
-from flask import Flask, g, redirect, send_from_directory, session, url_for
+from flask import Flask, g, got_request_exception, send_from_directory, session, url_for
 from flask.ext.assets import Bundle, Environment
+from rollbar import init
+from rollbar.contrib.flask import report_exception
 
 from modules import database
 from modules import utilities
@@ -12,6 +14,8 @@ from modules import utilities
 from sections import administrators
 from sections import others
 from sections import visitors
+
+from settings import ROLLBAR
 
 application = Flask(__name__, static_folder=join(abspath(dirname(__file__)), 'resources'))
 application.config.from_pyfile('settings.py')
@@ -49,6 +53,17 @@ assets.register('stylesheets', Bundle(
     filters='cssmin,cssrewrite'if not application.config['DEBUG'] else None,
     output='assets/compressed.css',
 ))
+
+
+@application.before_first_request
+def init_rollbar():
+    init(
+        ROLLBAR['access_token'],
+        ROLLBAR['environment'],
+        allow_logging_basic_config=False,
+        root=dirname(realpath(__file__)),
+    )
+    got_request_exception.connect(report_exception, application)
 
 
 @application.before_request
