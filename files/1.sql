@@ -81,10 +81,10 @@ CREATE TABLE IF NOT EXISTS `orders_products` (
     INDEX `order_id` (`order_id`),
     INDEX `item_number` (`item_number`),
     INDEX `title` (`title`),
-    INDEX `url` (`url`)
+    INDEX `url` (`url`),
     INDEX `recurring` (`recurring`),
     INDEX `shippable` (`shippable`),
-    INDEX `amount` (`amount`),
+    INDEX `amount` (`amount`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=0;
 
 SET FOREIGN_KEY_CHECKS = 1;
