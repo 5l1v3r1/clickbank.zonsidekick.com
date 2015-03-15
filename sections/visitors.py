@@ -35,24 +35,20 @@ def instant_notification():
     customer = g.mysql.query(models.customer).filter(email=dictionary['customer']['billing']['email']).first()
     if not customer:
         customer = models.customer(**{
-            'address': ', '.join([
-                '%(key)s: %(value)s' % {
-                    'key': key, 'value': value
-                }
-                for key, value in dictionary['customer']['billing']['address'].iteritems()
-            ]),
+            'address': dictionary['customer']['billing']['address'],
             'email': dictionary['customer']['billing']['email'],
             'first_name': dictionary['customer']['billing']['firstName'],
             'full_name': dictionary['customer']['billing']['fullName'],
             'last_name': dictionary['customer']['billing']['lastName'],
+            'phone_number': dictionary['customer']['billing']['phoneNumber'],
         })
     g.mysql.add(customer)
     order = models.order(**{
+        'affiliate': dictionary['affiliate'],
         'amounts_account': dictionary['totalAccountAmount'],
         'amounts_order': dictionary['totalOrderAmount'],
         'amounts_shipping': dictionary['totalShippingAmount'],
         'amounts_tax': dictionary['totalTaxAmount'],
-        'attempts': dictionary['attemptCount'],
         'currency': dictionary['currency'],
         'customer': customer,
         'language': dictionary['orderLanguage'],
@@ -60,9 +56,10 @@ def instant_notification():
         'receipt': dictionary['receipt'],
         'role': dictionary['role'],
         'timestamp': dictionary['transactionTime'],
+        'tracking_codes': dictionary['trackingCodes'],
         'type': dictionary['transactionType'],
         'vendor': dictionary['vendor'],
-        'version': dictionary['version'],
+        'vendor_variables': dictionary['vendorVariables'],
     })
     g.mysql.add(order)
     for item in dictionary['lineItems']:
