@@ -30,8 +30,6 @@
                                 )
                             }}
                             <th>Email</th>
-                            <th class="narrow">First Name</th>
-                            <th class="narrow">Last Name</th>
                             <th class="narrow">Full Name</th>
                             <th class="narrow text-right">Orders</th>
                         </tr>
@@ -39,8 +37,6 @@
                             <tr>
                                 <td class="narrow text-right">{{ customer.id }}</td>
                                 <td>{{ customer.email }}</td>
-                                <td class="narrow">{{ customer.first_name }}</td>
-                                <td class="narrow">{{ customer.last_name }}</td>
                                 <td class="narrow">{{ customer.full_name }}</td>
                                 <td class="narrow text-right">{{ customer.orders.count()|format_integer }}</td>
                             </tr>

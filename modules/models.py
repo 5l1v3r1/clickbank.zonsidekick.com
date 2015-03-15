@@ -10,6 +10,7 @@ from modules import database
 
 
 class json(TypeDecorator):
+
     impl = TEXT
 
     def process_bind_param(self, value, dialect):
@@ -66,6 +67,7 @@ class mutators_list(Mutable, list):
 
 
 class setting(database.base):
+
     __tablename__ = 'settings'
     __table_args__ = {
         'autoload': True,
@@ -73,6 +75,7 @@ class setting(database.base):
 
 
 class customer(database.base):
+
     __tablename__ = 'customers'
     __table_args__ = {
         'autoload': True,
@@ -82,6 +85,7 @@ class customer(database.base):
 
 
 class order(database.base):
+
     __tablename__ = 'orders'
     __table_args__ = {
         'autoload': True,
@@ -92,8 +96,14 @@ class order(database.base):
     tracking_codes = Column(mutators_list.as_mutable(json))
     vendor_variables = Column(mutators_dict.as_mutable(json))
 
+    def get_role(self):
+        if self.role == 'AFFILIATE':
+            return self.affiliate
+        return self.vendor
+
 
 class order_product(database.base):
+
     __tablename__ = 'orders_products'
     __table_args__ = {
         'autoload': True,

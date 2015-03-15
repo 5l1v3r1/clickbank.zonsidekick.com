@@ -8,8 +8,6 @@ from modules import models
 
 class customers(Form):
     email = TextField()
-    first_name = TextField(label='First Name')
-    last_name = TextField(label='Last Name')
     full_name = TextField(label='Full Name')
 
     def apply(self, query):
@@ -18,22 +16,6 @@ class customers(Form):
                 models.customer.email.like(
                     '%%%(email)s%%' % {
                         'email': self.email.data,
-                    }
-                )
-            )
-        if self.first_name.data:
-            query = query.filter(
-                models.customer.first_name.like(
-                    '%%%(first_name)s%%' % {
-                        'first_name': self.first_name.data,
-                    }
-                )
-            )
-        if self.last_name.data:
-            query = query.filter(
-                models.customer.last_name.like(
-                    '%%%(last_name)s%%' % {
-                        'last_name': self.last_name.data,
                     }
                 )
             )
@@ -49,10 +31,22 @@ class customers(Form):
 
 
 class orders(Form):
-    type = TextField()
     receipt = TextField()
+    type = TextField()
+    role = TextField()
+    affiliate = TextField()
+    payment_method = TextField(label='Payment Method')
+    vendor = TextField()
 
     def apply(self, query):
+        if self.receipt.data:
+            query = query.filter(
+                models.order.receipt.like(
+                    '%%%(receipt)s%%' % {
+                        'receipt': self.receipt.data,
+                    }
+                )
+            )
         if self.type.data:
             query = query.filter(
                 models.order.type.like(
@@ -61,11 +55,35 @@ class orders(Form):
                     }
                 )
             )
-        if self.receipt.data:
+        if self.role.data:
             query = query.filter(
-                models.order.receipt.like(
-                    '%%%(receipt)s%%' % {
-                        'receipt': self.receipt.data,
+                models.order.role.like(
+                    '%%%(role)s%%' % {
+                        'role': self.role.data,
+                    }
+                )
+            )
+        if self.affiliate.data:
+            query = query.filter(
+                models.order.affiliate.like(
+                    '%%%(affiliate)s%%' % {
+                        'affiliate': self.affiliate.data,
+                    }
+                )
+            )
+        if self.payment_method.data:
+            query = query.filter(
+                models.order.payment_method.like(
+                    '%%%(payment_method)s%%' % {
+                        'payment_method': self.payment_method.data,
+                    }
+                )
+            )
+        if self.vendor.data:
+            query = query.filter(
+                models.order.vendor.like(
+                    '%%%(vendor)s%%' % {
+                        'vendor': self.vendor.data,
                     }
                 )
             )

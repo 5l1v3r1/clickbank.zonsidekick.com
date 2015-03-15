@@ -29,21 +29,23 @@
                             )
                         }}
                         <th>Customer</th>
-                        <th class="narrow">Type</th>
+                        <th class="narrow text-right">Items</th>
                         <th class="narrow">Receipt</th>
+                        <th class="narrow">Type</th>
+                        <th class="narrow">Role (Affiliate/Vendor)</th>
                         <th class="narrow">Payment Method</th>
                         <th class="narrow text-right">Amount</th>
-                        <th class="narrow">Currency</th>
                     </tr>
                     {% for order in orders %}
                         <tr>
                             <td class="narrow text-right">{{ order.id }}</td>
                             <td>{{ order.customer.full_name }} ({{ order.customer.email }})</td>
-                            <td class="narrow">{{ order.type }}</td>
+                            <td class="narrow text-right">{{ order.orders_products.count()|format_integer }}</td>
                             <td class="narrow">{{ order.receipt }}</td>
+                            <td class="narrow">{{ order.type }}</td>
+                            <td class="narrow">{{ order.role }} ( {{ order.get_role() }})</td>
                             <td class="narrow">{{ order.payment_method }}</td>
-                            <td class="narrow text-center">{{ order.amounts_account|format_float }}</td>
-                            <td class="narrow">{{ order.currency }}</td>
+                            <td class="narrow text-center">{{ order.amounts_account|format_float }} {{ order.currency }}</td>
                         </tr>
                     {% endfor %}
                 </table>
