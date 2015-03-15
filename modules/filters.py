@@ -43,7 +43,8 @@ class orders(Form):
     def __init__(self, *args, **kwargs):
         super(orders, self).__init__(*args, **kwargs)
         self.customer.choices = [('', 'All')] + [
-            (customer.id, customer.name) for customer in g.mysql.query(models.customer).order_by('full_name asc').all()
+            (customer.id, customer.full_name)
+            for customer in g.mysql.query(models.customer).order_by('full_name asc').all()
         ]
 
     def apply(self, query):

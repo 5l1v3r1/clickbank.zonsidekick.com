@@ -13,39 +13,59 @@
                 </h1>
             </div>
             {% if customers %}
-                <form action="{{ url_for('administrators.customers_process') }}" method="post">
-                    {{ macros.pagination({'name': 'administrators.customers_process', 'options': {}}, pager) }}
-                    <table class="table table-hover table-striped">
+                {{ macros.pagination({'name': 'administrators.customers_process', 'options': {}}, pager) }}
+                <table class="table table-hover table-striped">
+                    <tr>
+                        {{
+                            macros.th(
+                                {
+                                    'name': 'administrators.customers_process',
+                                    'options': {},
+                                },
+                                order_by,
+                                'id',
+                                'ID',
+                                'narrow text-right'
+                            )
+                        }}
+                        {{
+                            macros.th(
+                                {
+                                    'name': 'administrators.customers_process',
+                                    'options': {},
+                                },
+                                order_by,
+                                'email',
+                                'Email',
+                                ''
+                            )
+                        }}
+                        {{
+                            macros.th(
+                                {
+                                    'name': 'administrators.customers_process',
+                                    'options': {},
+                                },
+                                order_by,
+                                'full_name',
+                                'Full Name',
+                                'narrow'
+                            )
+                        }}
+                        <th class="narrow text-right">Orders</th>
+                        <th class="narrow text-right">Money Spent</th>
+                    </tr>
+                    {% for customer in customers %}
                         <tr>
-                            {{
-                                macros.th(
-                                    {
-                                        'name': 'administrators.customers_process',
-                                        'options': {},
-                                    },
-                                    order_by,
-                                    'customers.id',
-                                    'ID',
-                                    'narrow text-right'
-                                )
-                            }}
-                            <th>Email</th>
-                            <th class="narrow">Full Name</th>
-                            <th class="narrow text-right">Orders</th>
-                            <th class="narrow text-right">Money Spent</th>
+                            <td class="narrow text-right">{{ customer.id }}</td>
+                            <td>{{ customer.email }}</td>
+                            <td class="narrow">{{ customer.full_name }}</td>
+                            <td class="narrow text-right">{{ customer.orders.count()|format_integer }}</td>
+                            <td class="narrow text-right">{{ customer.get_amount()|format_float }}</td>
                         </tr>
-                        {% for customer in customers %}
-                            <tr>
-                                <td class="narrow text-right">{{ customer.id }}</td>
-                                <td>{{ customer.email }}</td>
-                                <td class="narrow">{{ customer.full_name }}</td>
-                                <td class="narrow text-right">{{ customer.orders.count()|format_integer }}</td>
-                                <td class="narrow text-right">{{ customer.get_amount()|format_float }}</td>
-                            </tr>
-                        {% endfor %}
-                    </table>
-                    {{ macros.pagination({'name': 'administrators.customers_process', 'options': {}}, pager) }}
-                </form>
+                    {% endfor %}
+                </table>
+                {{ macros.pagination({'name': 'administrators.customers_process', 'options': {}}, pager) }}
             {% else %}
                 <div class="alert alert-danger">
                     <i class="fa fa-fw fa-exclamation-triangle"></i>

@@ -103,14 +103,14 @@ def orders_overview():
         'orders',
         {},
         {
-            'column': 'timestamp',
+            'column': 'orders.timestamp',
             'direction': 'desc',
         },
         10,
         1
     )
     form = filters.orders(**filters_)
-    query = form.apply(g.mysql.query(models.order))
+    query = form.apply(g.mysql.query(models.order).join(models.customer))
     pager = classes.pager(query.count(), limit, page)
     return render_template(
         'administrators/views/orders_overview.html',

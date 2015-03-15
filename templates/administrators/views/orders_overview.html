@@ -28,13 +28,79 @@
                                 'narrow text-right'
                             )
                         }}
-                        <th>Customer</th>
+                        {{
+                            macros.th(
+                                {
+                                    'name': 'administrators.orders_process',
+                                    'options': {},
+                                },
+                                order_by,
+                                'customers.full_name',
+                                'Customer',
+                                ''
+                            )
+                        }}
                         <th class="narrow text-right">Items</th>
-                        <th class="narrow">Receipt</th>
-                        <th class="narrow">Type</th>
-                        <th class="narrow">Role (Affiliate/Vendor)</th>
-                        <th class="narrow">Payment Method</th>
-                        <th class="narrow text-right">Amount</th>
+                        {{
+                            macros.th(
+                                {
+                                    'name': 'administrators.orders_process',
+                                    'options': {},
+                                },
+                                order_by,
+                                'orders.receipt',
+                                'Receipt',
+                                'narrow'
+                            )
+                        }}
+                        {{
+                            macros.th(
+                                {
+                                    'name': 'administrators.orders_process',
+                                    'options': {},
+                                },
+                                order_by,
+                                'orders.type',
+                                'Type',
+                                'narrow'
+                            )
+                        }}
+                        {{
+                            macros.th(
+                                {
+                                    'name': 'administrators.orders_process',
+                                    'options': {},
+                                },
+                                order_by,
+                                'orders.role',
+                                'Role (Affiliate/Vendor)',
+                                'narrow'
+                            )
+                        }}
+                        {{
+                            macros.th(
+                                {
+                                    'name': 'administrators.orders_process',
+                                    'options': {},
+                                },
+                                order_by,
+                                'orders.payment_method',
+                                'Payment Method',
+                                'narrow'
+                            )
+                        }}
+                        {{
+                            macros.th(
+                                {
+                                    'name': 'administrators.orders_process',
+                                    'options': {},
+                                },
+                                order_by,
+                                'orders.amounts_order',
+                                'Amount',
+                                'narrow text-right'
+                            )
+                        }}
                     </tr>
                     {% for order in orders %}
                         <tr>
@@ -45,7 +111,9 @@
                             <td class="narrow">{{ order.type }}</td>
                             <td class="narrow">{{ order.role }} ( {{ order.get_role() }})</td>
                             <td class="narrow">{{ order.payment_method }}</td>
-                            <td class="narrow text-center">{{ order.amounts_order|format_float }} {{ order.currency }}</td>
+                            <td class="narrow text-center">
+                                {{ order.amounts_order|format_float }} {{ order.currency }}
+                            </td>
                         </tr>
                     {% endfor %}
                 </table>
