@@ -1,6 +1,6 @@
 {% extends 'administrators/layout.html' %}
 
-{% set title = 'Profile' %}
+{% set title = 'Settings' %}
 
 {% block component %}
     <div class="row">
@@ -11,7 +11,7 @@
                     {{ title }}
                 </h1>
             </div>
-            <form action="{{ url_for('administrators.profile') }}" class="form-horizontal" method="post">
+            <form action="{{ url_for('administrators.settings') }}" class="form-horizontal" method="post">
                 {{ macros.form(form) }}
                 <div class="form-group">
                     <div class="col-lg-offset-2 col-lg-10 col-md-offset-2 col-md-10">

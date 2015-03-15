@@ -64,11 +64,6 @@ def after_request(response):
     return response
 
 
-@application.route('/')
-def dashboard():
-    return redirect(url_for('administrators.dashboard'))
-
-
 @application.route('/404')
 @application.errorhandler(404)
 def errors_404(error=None):

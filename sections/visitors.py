@@ -3,7 +3,7 @@
 from hashlib import sha1
 
 from Crypto.Cipher import AES
-from flask import Blueprint, g, redirect, request
+from flask import Blueprint, g, redirect, request, url_for
 from ujson import loads
 
 from modules import models
@@ -15,7 +15,7 @@ blueprint = Blueprint('visitors', __name__)
 
 @blueprint.route('/')
 def dashboard():
-    return redirect('administrators.dashboard')
+    return redirect(url_for('administrators.dashboard'))
 
 
 @blueprint.route('/notify', methods=['POST'])

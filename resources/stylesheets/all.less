@@ -1,50 +1,50 @@
-@import '../vendor/bootstrap/less/variables.less';
+@import '../vendors/bootstrap/less/variables.less';
 
 @grid-gutter-width: 20px;
 
-@import '../vendor/bootstrap/less/mixins.less';
-@import '../vendor/bootstrap/less/normalize.less';
-@import '../vendor/bootstrap/less/print.less';
-@import '../vendor/bootstrap/less/scaffolding.less';
-@import '../vendor/bootstrap/less/type.less';
-@import '../vendor/bootstrap/less/code.less';
-@import '../vendor/bootstrap/less/grid.less';
-@import '../vendor/bootstrap/less/tables.less';
-@import '../vendor/bootstrap/less/forms.less';
-@import '../vendor/bootstrap/less/buttons.less';
-@import '../vendor/bootstrap/less/component-animations.less';
-@import '../vendor/bootstrap/less/glyphicons.less';
-@import '../vendor/bootstrap/less/dropdowns.less';
-@import '../vendor/bootstrap/less/button-groups.less';
-@import '../vendor/bootstrap/less/input-groups.less';
-@import '../vendor/bootstrap/less/navs.less';
-@import '../vendor/bootstrap/less/navbar.less';
-@import '../vendor/bootstrap/less/breadcrumbs.less';
-@import '../vendor/bootstrap/less/pagination.less';
-@import '../vendor/bootstrap/less/pager.less';
-@import '../vendor/bootstrap/less/labels.less';
-@import '../vendor/bootstrap/less/badges.less';
-@import '../vendor/bootstrap/less/jumbotron.less';
-@import '../vendor/bootstrap/less/thumbnails.less';
-@import '../vendor/bootstrap/less/alerts.less';
-@import '../vendor/bootstrap/less/progress-bars.less';
-@import '../vendor/bootstrap/less/media.less';
-@import '../vendor/bootstrap/less/list-group.less';
-@import '../vendor/bootstrap/less/panels.less';
-@import '../vendor/bootstrap/less/wells.less';
-@import '../vendor/bootstrap/less/close.less';
-@import '../vendor/bootstrap/less/modals.less';
-@import '../vendor/bootstrap/less/tooltip.less';
-@import '../vendor/bootstrap/less/popovers.less';
-@import '../vendor/bootstrap/less/carousel.less';
-@import '../vendor/bootstrap/less/utilities.less';
-@import '../vendor/bootstrap/less/responsive-utilities.less';
-@import '../vendor/bootstrap/less/theme.less';
+@import '../vendors/bootstrap/less/mixins.less';
+@import '../vendors/bootstrap/less/normalize.less';
+@import '../vendors/bootstrap/less/print.less';
+@import '../vendors/bootstrap/less/scaffolding.less';
+@import '../vendors/bootstrap/less/type.less';
+@import '../vendors/bootstrap/less/code.less';
+@import '../vendors/bootstrap/less/grid.less';
+@import '../vendors/bootstrap/less/tables.less';
+@import '../vendors/bootstrap/less/forms.less';
+@import '../vendors/bootstrap/less/buttons.less';
+@import '../vendors/bootstrap/less/component-animations.less';
+@import '../vendors/bootstrap/less/glyphicons.less';
+@import '../vendors/bootstrap/less/dropdowns.less';
+@import '../vendors/bootstrap/less/button-groups.less';
+@import '../vendors/bootstrap/less/input-groups.less';
+@import '../vendors/bootstrap/less/navs.less';
+@import '../vendors/bootstrap/less/navbar.less';
+@import '../vendors/bootstrap/less/breadcrumbs.less';
+@import '../vendors/bootstrap/less/pagination.less';
+@import '../vendors/bootstrap/less/pager.less';
+@import '../vendors/bootstrap/less/labels.less';
+@import '../vendors/bootstrap/less/badges.less';
+@import '../vendors/bootstrap/less/jumbotron.less';
+@import '../vendors/bootstrap/less/thumbnails.less';
+@import '../vendors/bootstrap/less/alerts.less';
+@import '../vendors/bootstrap/less/progress-bars.less';
+@import '../vendors/bootstrap/less/media.less';
+@import '../vendors/bootstrap/less/list-group.less';
+@import '../vendors/bootstrap/less/panels.less';
+@import '../vendors/bootstrap/less/wells.less';
+@import '../vendors/bootstrap/less/close.less';
+@import '../vendors/bootstrap/less/modals.less';
+@import '../vendors/bootstrap/less/tooltip.less';
+@import '../vendors/bootstrap/less/popovers.less';
+@import '../vendors/bootstrap/less/carousel.less';
+@import '../vendors/bootstrap/less/utilities.less';
+@import '../vendors/bootstrap/less/responsive-utilities.less';
+@import '../vendors/bootstrap/less/theme.less';
 
-@import '../vendor/font-awesome/less/font-awesome.less';
+@import '../vendors/font-awesome/less/font-awesome.less';
 
-@fa-font-path: '../vendor/font-awesome/fonts';
-@icon-font-path: '../vendor/bootstrap/fonts/';
+@fa-font-path: '../vendors/font-awesome/fonts';
+@icon-font-path: '../vendors/bootstrap/fonts/';
 
 @font-face {
     font-family: 'Open Sans';
@@ -108,6 +108,7 @@ select {
 
 body {
     background-color: #ffffff;
+    background-image: url(../images/body.png);
     background-position: center center;
     background-repeat: repeat;
     padding: 20px;
@@ -120,7 +121,6 @@ h4,
 h5,
 h6,
 hr,
-iframe,
 ol,
 p,
 pre,
@@ -216,4 +216,7 @@ ul {
     margin-right: 15px;
     margin-top: 15px;
     z-index: 1;
+    strong {
+        cursor: pointer;
+    }
 }
