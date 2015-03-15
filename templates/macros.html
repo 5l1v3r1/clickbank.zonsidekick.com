@@ -29,7 +29,7 @@
 {% macro form(form) %}
     {% for field in form %}
         {% if not field.type in ['CSRFTokenField', 'HiddenField'] %}
-            {{ widget_1(field, class=class, **kwargs) }}
+            {{ widget(field, class=class, **kwargs) }}
         {% endif %}
     {% endfor %}
     {{ form.hidden_tag() }}
@@ -40,47 +40,29 @@
         <span class="pull-left">
             <ul class="pagination">
                 <li class="{{ 'disabled' if pager.page == 1 else '' }}">
-                    <a href="{{ url_for(
-                        route['name'], page=1, **route['options']
-                    ) }}">
+                    <a href="{{ url_for(route['name'], page=1, **route['options']) }}">
                         <span>&laquo;</span>
                     </a>
                 </li>
                 <li class="{{ 'disabled' if pager.page == 1 else '' }}">
-                    <a href="{{ url_for(
-                        route['name'], page=pager.previous, **route['options']
-                    ) }}">
+                    <a href="{{ url_for(route['name'], page=pager.previous, **route['options']) }}">
                         <span>&lt;</span>
                     </a>
                 </li>
                 {% for page in pager.get_pages(2) %}
                     <li class="{{ 'active' if page == pager.page else '' }}">
-                        <a href="{{ url_for(
-                            route['name'], page=page, **route['options']
-                        ) }}">
+                        <a href="{{ url_for(route['name'], page=page, **route['options']) }}">
                             <span>{{ page|format_integer }}</span>
                         </a>
                     </li>
                 {% endfor %}
-                <li class="{{
-                    'disabled'
-                    if pager.page == pager.pages
-                    else ''
-                }}">
-                    <a href="{{ url_for(
-                        route['name'], page=pager.next, **route['options']
-                    ) }}">
+                <li class="{{ 'disabled' if pager.page == pager.pages else '' }}">
+                    <a href="{{ url_for(route['name'], page=pager.next, **route['options']) }}">
                         <span>&gt;</span>
                     </a>
                 </li>
-                <li class="{{
-                    'disabled'
-                    if pager.page == pager.pages
-                    else ''
-                }}">
-                    <a href="{{ url_for(
-                        route['name'], page=pager.pages, **route['options']
-                    ) }}">
+                <li class="{{ 'disabled' if pager.page == pager.pages else '' }}">
+                    <a href="{{ url_for(route['name'], page=pager.pages, **route['options']) }}">
                         <span>&raquo;</span>
                     </a>
                 </li>
@@ -91,9 +73,7 @@
             <ul class="pagination">
                 {% for limit in [10, 20, 30, 40, 50] %}
                     <li class="{{ 'active' if limit == pager.limit else '' }}">
-                        <a href="{{ url_for(
-                            route['name'], limit=limit, **route['options']
-                        ) }}">
+                        <a href="{{ url_for(route['name'], limit=limit, **route['options']) }}">
                             <span>{{ limit }}</span>
                         </a>
                     </li>
@@ -111,34 +91,18 @@
 {% endmacro %}
 
 {% macro th(route, order_by, key, value, class) %}
-    {% set direction = (
-        'desc'
-        if order_by['direction'] == 'asc'
-        else 'asc'
-        if order_by['column'] == key
-        else 'asc'
-    ) %}
+    {% set direction = ('desc' if order_by['direction'] == 'asc' else 'asc' if order_by['column'] == key else 'asc') %}
     <th class="{{ class }} {{ 'sort' if order_by['column'] == key else '' }}">
-        <a href="{{ url_for(
-            route['name'],
-            order_by_column=key,
-            order_by_direction=direction,
-            **route['options']
-        ) }}">
+        <a href="{{ url_for(route['name'], order_by_column=key, order_by_direction=direction, **route['options']) }}">
             {{ value }}
         </a>
         {% if order_by['column'] == key %}
-            <i class="fa fa-fw {{
-                'fa-sort-alpha-asc'
-                if direction == 'asc'
-                else 'fa-sort-alpha-desc'
-            }}">
-            </i>
+            <i class="fa fa-fw {{ 'fa-sort-alpha-asc' if direction == 'asc' else 'fa-sort-alpha-desc' }}"></i>
         {% endif %}
     </th>
 {% endmacro %}
 
-{% macro widget_1(field) %}
+{% macro widget(field) %}
     {% set class = [] %}
     {% if field.flags.required %}
         {% do class.append('required') %}
@@ -147,10 +111,7 @@
         {% do class.append('has-error') %}
     {% endif %}
     <div class="form-group {{ class|join(' ') }}">
-        <label
-            class="col-lg-2 col-md-2 control-label"
-            for="{{ field.label.field_id}}"
-            >{{ field.label.text }}</label>
+        <label class="col-lg-2 col-md-2 control-label" for="{{ field.label.field_id}}">{{ field.label.text }}</label>
         <div class="col-lg-10 col-md-10">
             {% set class = [] %}
             {% if 'class' in kwargs and kwargs['class'] %}

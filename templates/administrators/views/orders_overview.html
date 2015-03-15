@@ -13,64 +13,37 @@
                 </h1>
             </div>
             {% if orders %}
-                {{ macros.pagination({
-                    'name': 'administrators.orders_process',
-                    'options': {},
-                }, pager) }}
+                {{ macros.pagination({'name': 'administrators.orders_process', 'options': {}}, pager) }}
                 <table class="table table-hover table-striped">
                     <tr>
-                        {{ macros.th(
-                            {
-                                'name': 'administrators.orders_process',
-                                'options': {},
-                            },
-                            order_by,
-                            'orders.id',
-                            'ID',
-                            'narrow text-center'
-                        ) }}
+                        {{
+                            macros.th(
+                                {
+                                    'name': 'administrators.orders_process',
+                                    'options': {},
+                                },
+                                order_by,
+                                'orders.id',
+                                'ID',
+                                'narrow text-right'
+                            )
+                        }}
+                        <th>Customer</th>
                         <th class="narrow">Type</th>
-                        <th class="narrow">Vendor</th>
-                        <th class="narrow">Currency</th>
-                        <th class="narrow">Payment Method</th>
-                        <th class="narrow text-center">Amount</th>
                         <th class="narrow">Receipt</th>
-                        <th class="actions narrow">Actions</th>
+                        <th class="narrow">Payment Method</th>
+                        <th class="narrow text-right">Amount</th>
+                        <th class="narrow">Currency</th>
                     </tr>
                     {% for order in orders %}
                         <tr>
-                            <td class="narrow text-center">
-                                {{ order.id }}
-                            </td>
+                            <td class="narrow text-right">{{ order.id }}</td>
+                            <td>{{ order.customer.full_name }} ({{ order.customer.email }})</td>
                             <td class="narrow">{{ order.type }}</td>
-                            <td class="narrow">{{ order.vendor }}</td>
-                            <td class="narrow">{{ order.currency }}</td>
-                            <td class="narrow">{{ order.payment_method }}</td>
-                            <td class="narrow text-center">
-                                {{ order.amounts_account|format_float }}
-                            </td>
                             <td class="narrow">{{ order.receipt }}</td>
-                            <td class="actions narrow">
-                                <a
-                                    class="btn btn-xs btn-danger"
-                                    href="{{ url_for(
-                                        'administrators.orders_overview'
-                                    ) }}"
-                                    >
-                                    <i class="fa fa-fw fa-undo"></i>
-                                    Refund
-                                </a>
-                                <a
-                                    class="btn btn-xs btn-danger"
-                                    href="{{ url_for(
-                                        'administrators.orders_overview'
-                                    ) }}"
-                                    >
-                                    <i class="fa fa-fw fa-times">
-                                    </i>
-                                    Cancel
-                                </a>
-                            </td>
+                            <td class="narrow">{{ order.payment_method }}</td>
+                            <td class="narrow text-center">{{ order.amounts_account|format_float }}</td>
+                            <td class="narrow">{{ order.currency }}</td>
                         </tr>
                     {% endfor %}
                 </table>
@@ -88,31 +61,15 @@
                     Filters
                 </h1>
             </div>
-            <form
-                action="{{ url_for('administrators.orders_process') }}"
-                class="form-horizontal"
-                method="post"
-                >
+            <form action="{{ url_for('administrators.orders_process') }}" class="form-horizontal" method="post">
                 {{ macros.form(form) }}
                 <div class="form-group">
-                    <div
-                        class="col-lg-offset-2 col-lg-10 col-md-offset-2 col-md-10"
-                        >
-                        <button
-                            class="btn btn-success"
-                            name="submit"
-                            type="submit"
-                            value="set"
-                            >
+                    <div class="col-lg-offset-2 col-lg-10 col-md-offset-2 col-md-10">
+                        <button class="btn btn-success" name="submit" type="submit" value="set">
                             <i class="fa fa-fw fa-dot-circle-o"></i>
                             Set
                         </button>
-                        <button
-                            class="btn btn-danger"
-                            name="submit"
-                            type="submit"
-                            value="unset"
-                            >
+                        <button class="btn btn-danger" name="submit" type="submit" value="unset">
                             <i class="fa fa-fw fa-circle-o"></i>
                             Unset
                         </button>

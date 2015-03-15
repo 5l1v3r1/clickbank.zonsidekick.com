@@ -25,6 +25,8 @@ class order(database.base):
         'autoload': True,
     }
 
+    customer = relationship('customer', backref=backref('orders', cascade='all,delete-orphan', lazy='dynamic'))
+
 
 class order_product(database.base):
     __tablename__ = 'orders_products'
@@ -32,6 +34,4 @@ class order_product(database.base):
         'autoload': True,
     }
 
-    order = relationship(
-        'order', backref=backref('orders_products', cascade='all,delete-orphan', lazy='dynamic'),
-    )
+    order = relationship('order', backref=backref('orders_products', cascade='all,delete-orphan', lazy='dynamic'))

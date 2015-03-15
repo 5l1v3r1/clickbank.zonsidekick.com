@@ -13,40 +13,36 @@
                 </h1>
             </div>
             {% if customers %}
-                <form
-                    action="{{ url_for('administrators.customers_process') }}"
-                    method="post"
-                    >
-                    {{ macros.pagination({
-                        'name': 'administrators.customers_process',
-                        'options': {},
-                    }, pager) }}
+                <form action="{{ url_for('administrators.customers_process') }}" method="post">
+                    {{ macros.pagination({'name': 'administrators.customers_process', 'options': {}}, pager) }}
                     <table class="table table-hover table-striped">
                         <tr>
-                            {{ macros.th(
-                                {
-                                    'name': 'administrators.customers_process',
-                                    'options': {},
-                                },
-                                order_by,
-                                'customers.id',
-                                'ID',
-                                'narrow text-center'
-                            ) }}
-                            <th class="narrow">Email</th>
+                            {{
+                                macros.th(
+                                    {
+                                        'name': 'administrators.customers_process',
+                                        'options': {},
+                                    },
+                                    order_by,
+                                    'customers.id',
+                                    'ID',
+                                    'narrow text-right'
+                                )
+                            }}
+                            <th>Email</th>
                             <th class="narrow">First Name</th>
                             <th class="narrow">Last Name</th>
                             <th class="narrow">Full Name</th>
+                            <th class="narrow text-right">Orders</th>
                         </tr>
                         {% for customer in customers %}
                             <tr>
-                                <td class="narrow text-center">
-                                    {{ customer.id }}
-                                </td>
+                                <td class="narrow text-right">{{ customer.id }}</td>
                                 <td>{{ customer.email }}</td>
-                                <td>{{ customer.first_name }}</td>
-                                <td>{{ customer.last_name }}</td>
-                                <td>{{ customer.full_name }}</td>
+                                <td class="narrow">{{ customer.first_name }}</td>
+                                <td class="narrow">{{ customer.last_name }}</td>
+                                <td class="narrow">{{ customer.full_name }}</td>
+                                <td class="narrow text-right">{{ customer.orders.count()|format_integer }}</td>
                             </tr>
                         {% endfor %}
                     </table>
@@ -65,31 +61,15 @@
                     Filters
                 </h1>
             </div>
-            <form
-                action="{{ url_for('administrators.customers_process') }}"
-                class="form-horizontal"
-                method="post"
-                >
+            <form action="{{ url_for('administrators.customers_process') }}" class="form-horizontal" method="post">
                 {{ macros.form(form) }}
                 <div class="form-group">
-                    <div
-                        class="col-lg-offset-2 col-lg-10 col-md-offset-2 col-md-10"
-                        >
-                        <button
-                            class="btn btn-success"
-                            name="submit"
-                            type="submit"
-                            value="set"
-                            >
+                    <div class="col-lg-offset-2 col-lg-10 col-md-offset-2 col-md-10">
+                        <button class="btn btn-success" name="submit" type="submit" value="set">
                             <i class="fa fa-fw fa-dot-circle-o"></i>
                             Set
                         </button>
-                        <button
-                            class="btn btn-danger"
-                            name="submit"
-                            type="submit"
-                            value="unset"
-                            >
+                        <button class="btn btn-danger" name="submit" type="submit" value="unset">
                             <i class="fa fa-fw fa-circle-o"></i>
                             Unset
                         </button>

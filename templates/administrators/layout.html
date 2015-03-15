@@ -3,54 +3,46 @@
 <!doctype html>
 <html lang="en">
     <head>
-        <link
-            href="{{ url_for('static', filename='images/favicon.ico') }}"
-            rel="shortcut icon"
-            >
+        <link href="{{ url_for('static', filename='images/favicon.ico') }}" rel="shortcut icon">
         <meta charset="utf-8">
-        <title>{{ title }} - Clickbank - Zonsidekick</title>
+        <title>{{ title }} - clickbank.zonsidekick.com</title>
         {% assets "stylesheets" %}
             <link href="{{ ASSET_URL }}" rel="stylesheet" type="text/css">
         {% endassets %}
     </head>
-    <body
-        class="administrators"
-        data-background="{{ url_for('static', filename='images/body.png') }}"
-        >
+    <body>
         <div class="container">
+            <div class="row">
+                <div class="col-lg-12 col-md-12">
+                    <div id="logo">
+                        <a href="{{ url_for('administrators.dashboard') }}">clickbank.zonsidekick.com</a>
+                    </div>
+                </div>
+            </div>
             <div class="row">
                 <div class="col-lg-12 col-md-12">
                     {% if g.administrator %}
                         <div class="dropdown pull-right" id="shortcuts">
-                            <strong
-                                class="dropdown-toggle"
-                                data-toggle="dropdown"
-                                >
+                            <strong class="dropdown-toggle" data-toggle="dropdown">
                                 <i class="fa fa-fw fa-user-md"></i>
                                 Administrator
                                 <i class="caret"></i>
                             </strong>
                             <ul class="dropdown-menu">
                                 <li>
-                                    <a href="{{ url_for(
-                                        'administrators.dashboard'
-                                    ) }}">
+                                    <a href="{{ url_for('administrators.dashboard') }}">
                                         <i class="fa fa-fw fa-home"></i>
                                         Dashboard
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="{{ url_for(
-                                        'administrators.profile'
-                                    ) }}">
-                                        <i class="fa fa-fw fa-cog"></i>
-                                        Profile
+                                    <a href="{{ url_for('administrators.settings') }}">
+                                        <i class="fa fa-fw fa-cogs"></i>
+                                        Settings
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="{{ url_for(
-                                        'administrators.sign_out'
-                                    ) }}">
+                                    <a href="{{ url_for('administrators.sign_out') }}">
                                         <i class="fa fa-fw fa-sign-out"></i>
                                         Sign Out
                                     </a>
@@ -58,52 +50,26 @@
                             </ul>
                         </div>
                     {% endif %}
-                    <div id="logo">
-                        <a href="{{ url_for('administrators.dashboard') }}">
-                            Clickbank - Zonsidekick
-                        </a>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-lg-12 col-md-12">
                     <nav class="navbar navbar-default">
                         <div class="navbar-header">
                             <ul class="nav navbar-nav">
                                 {% if g.administrator %}
-                                    <li class="{{
-                                        'active'
-                                        if navbar == 'customers'
-                                        else ''
-                                    }}">
-                                        <a href="{{ url_for(
-                                            'administrators.customers_overview'
-                                        ) }}">
+                                    <li class="{{ 'active' if navbar == 'customers' else '' }}">
+                                        <a href="{{ url_for('administrators.customers_overview') }}">
                                             <i class="fa fa-fw fa-users"></i>
                                             Customers
                                         </a>
                                     </li>
-                                    <li class="{{
-                                        'active'
-                                        if navbar == 'orders'
-                                        else ''
-                                    }}">
-                                        <a href="{{ url_for(
-                                            'administrators.orders_overview'
-                                        ) }}">
+                                    <li class="{{ 'active' if navbar == 'orders' else '' }}">
+                                        <a href="{{ url_for('administrators.orders_overview') }}">
                                             <i class="fa fa-fw fa-money"></i>
                                             Orders
                                         </a>
                                     </li>
                                 {% else %}
-                                    <li class="{{
-                                        'active' if navbar == 'sign_in' else ''
-                                    }}">
-                                        <a href="{{ url_for(
-                                            'administrators.sign_in'
-                                        ) }}">
-                                            <i class="fa fa-fw fa-sign-in">
-                                            </i>
+                                    <li class="{{ 'active' if navbar == 'sign_in' else '' }}">
+                                        <a href="{{ url_for('administrators.sign_in') }}">
+                                            <i class="fa fa-fw fa-sign-in"></i>
                                             Sign In
                                         </a>
                                     </li>
@@ -119,9 +85,7 @@
             <div class="row">
                 <div class="col-lg-12 col-md-12">
                     <hr>
-                    <p class="text-right">
-                        &copy; {{ g.year }} - All Rights Reserved
-                    </p>
+                    <p class="text-right">&copy; {{ g.year }} - All Rights Reserved</p>
                 </div>
             </div>
         </div>

@@ -23,6 +23,5 @@ def assets_build():
 def assets_watch():
     CommandLineEnvironment(assets, getLogger('flask')).watch()
 
-
 if __name__ == '__main__':
     manager.run()

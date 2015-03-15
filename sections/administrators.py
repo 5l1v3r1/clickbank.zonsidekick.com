@@ -9,25 +9,9 @@ blueprint = Blueprint('administrators', __name__)
 
 @blueprint.before_request
 def before_request():
-    g.administrator = None
+    g.administrator = False
     if 'administrator' in session:
         g.administrator = True
-
-
-@blueprint.route('/profile', methods=['GET', 'POST'])
-@decorators.requires_administrator
-def profile():
-    form = forms.profile(
-        request.form,
-        username=g.mysql.query(models.setting).filter(models.setting.key == 'username').first().value,
-    )
-    if request.method == 'POST':
-        if form.validate_on_submit():
-            form.persist()
-            flash('Your profile has been saved successfully.', 'success')
-            return redirect(url_for('administrators.profile'))
-        flash('Your profile has not been saved successfully.', 'danger')
-    return render_template('administrators/views/profile.html', form=form)
 
 
 @blueprint.route('/sign-in', methods=['GET', 'POST'])
@@ -49,6 +33,22 @@ def sign_out():
         del session['administrator']
     flash('You have been signed out successfully.', 'success')
     return redirect(url_for('administrators.dashboard'))
+
+
+@blueprint.route('/settings', methods=['GET', 'POST'])
+@decorators.requires_administrator
+def settings():
+    form = forms.settings(
+        request.form,
+        username=g.mysql.query(models.setting).filter(models.setting.key == 'username').first().value,
+    )
+    if request.method == 'POST':
+        if form.validate_on_submit():
+            form.persist()
+            flash('Your settings have been saved successfully.', 'success')
+            return redirect(url_for('administrators.settings'))
+        flash('Your settings have not been saved successfully.', 'danger')
+    return render_template('administrators/views/settings.html', form=form)
 
 
 @blueprint.route('/')
@@ -79,8 +79,8 @@ def customers_overview():
     pager = classes.pager(query.count(), limit, page)
     return render_template(
         'administrators/views/customers_overview.html',
-        form=form,
         customers=query.order_by('%(column)s %(direction)s' % order_by).all()[pager.prefix:pager.suffix],
+        form=form,
         order_by=order_by,
         pager=pager,
     )
@@ -115,8 +115,8 @@ def orders_overview():
     return render_template(
         'administrators/views/orders_overview.html',
         form=form,
-        orders=query.order_by('%(column)s %(direction)s' % order_by).all()[pager.prefix:pager.suffix],
         order_by=order_by,
+        orders=query.order_by('%(column)s %(direction)s' % order_by).all()[pager.prefix:pager.suffix],
         pager=pager,
     )
 

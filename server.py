@@ -38,8 +38,8 @@ assets.url = application.static_url_path
 assets.url_expire = True
 assets.versions = 'hash'
 assets.register('javascripts', Bundle(
-    'vendor/jquery/dist/jquery.js',
-    'vendor/bootstrap/dist/js/bootstrap.js',
+    'vendors/jquery/dist/jquery.js',
+    'vendors/bootstrap/dist/js/bootstrap.js',
     'javascripts/all.js',
     filters='rjsmin' if not application.config['DEBUG'] else None,
     output='assets/compressed.js',
@@ -66,7 +66,7 @@ def after_request(response):
 
 @application.route('/')
 def dashboard():
-    return redirect(url_for('visitors.dashboard'))
+    return redirect(url_for('administrators.dashboard'))
 
 
 @application.route('/404')

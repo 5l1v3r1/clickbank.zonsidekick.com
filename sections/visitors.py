@@ -3,69 +3,77 @@
 from hashlib import sha1
 
 from Crypto.Cipher import AES
-from flask import Blueprint, g, render_template, request
+from flask import Blueprint, g, redirect, request
 from ujson import loads
 
 from modules import models
-from settings import CLICKBANK_SECRET_KEY
+
+from settings import CLICKBANK
 
 blueprint = Blueprint('visitors', __name__)
 
 
 @blueprint.route('/')
 def dashboard():
-    return render_template('visitors/views/dashboard.html')
+    return redirect('administrators.dashboard')
 
 
-@blueprint.route('/instant-notification', methods=['POST'])
+@blueprint.route('/notify', methods=['POST'])
 def instant_notification():
     message = loads(request.data)
-    sha1_ = sha1()
-    sha1_.update(CLICKBANK_SECRET_KEY)
-    cipher = AES.new(
-        sha1_.hexdigest()[:32], AES.MODE_CBC, message['iv'].decode('base64')
-    )
-    decrypted_string = cipher.decrypt(
-        message['notification'].decode('base64')
-    ).strip()
-    decrypted_string = loads(''.join([
-        character for character in decrypted_string if ord(character) >= 32
+    algorithm = sha1()
+    algorithm.update(CLICKBANK)
+    dictionary = loads(''.join([
+        character
+        for character in AES.new(
+            algorithm.hexdigest()[:32], AES.MODE_CBC, message['iv'].decode('base64')
+        ).decrypt(
+            message['notification'].decode('base64')
+        ).strip()
+        if ord(character) >= 32
     ]))
+    customer = g.mysql.query(models.customer).filter(email=dictionary['customer']['billing']['email']).first()
+    if not customer:
+        customer = models.customer(**{
+            'address': ', '.join([
+                '%(key)s: %(value)s' % {
+                    'key': key, 'value': value
+                }
+                for key, value in dictionary['customer']['billing']['address'].iteritems()
+            ]),
+            'email': dictionary['customer']['billing']['email'],
+            'first_name': dictionary['customer']['billing']['firstName'],
+            'full_name': dictionary['customer']['billing']['fullName'],
+            'last_name': dictionary['customer']['billing']['lastName'],
+        })
+    g.mysql.add(customer)
     order = models.order(**{
-        'amounts_account': decrypted_string['lineItems'][0]['accountAmount'],
-        'amounts_order': decrypted_string['totalOrderAmount'],
-        'amounts_shipping': decrypted_string['totalShippingAmount'],
-        'amounts_tax': decrypted_string['totalTaxAmount'],
-        'attempts': decrypted_string['attemptCount'],
-        'currency': decrypted_string['currency'],
-        'language': decrypted_string['orderLanguage'],
-        'payment_method': decrypted_string['paymentMethod'],
-        'receipt': decrypted_string['receipt'],
-        'role': decrypted_string['role'],
-        'timestamp': decrypted_string['transactionTime'],
-        'type': decrypted_string['transactionType'],
-        'vendor': decrypted_string['vendor'],
-        'version': decrypted_string['version'],
+        'amounts_account': dictionary['totalAccountAmount'],
+        'amounts_order': dictionary['totalOrderAmount'],
+        'amounts_shipping': dictionary['totalShippingAmount'],
+        'amounts_tax': dictionary['totalTaxAmount'],
+        'attempts': dictionary['attemptCount'],
+        'currency': dictionary['currency'],
+        'customer': customer,
+        'language': dictionary['orderLanguage'],
+        'payment_method': dictionary['paymentMethod'],
+        'receipt': dictionary['receipt'],
+        'role': dictionary['role'],
+        'timestamp': dictionary['transactionTime'],
+        'type': dictionary['transactionType'],
+        'vendor': dictionary['vendor'],
+        'version': dictionary['version'],
     })
     g.mysql.add(order)
-    g.mysql.add(models.order_product(**{
-        'amount': decrypted_string['lineItems'][0]['accountAmount'],
-        'item_number': decrypted_string['lineItems'][0]['itemNo'],
-        'order': order,
-        'recurring': decrypted_string['lineItems'][0]['recurring'],
-        'shippable': decrypted_string['lineItems'][0]['shippable'],
-        'title': decrypted_string['lineItems'][0]['productTitle'],
-        'url': decrypted_string['lineItems'][0]['downloadUrl'],
-    }))
-    g.mysql.add(models.customer(**{
-        'address': ', '.join([
-            '%(key)s: %(value)s' % {'key': key, 'value': value}
-            for key, value in decrypted_string['customer']['billing']['address'].iteritems()
-        ]),
-        'email': decrypted_string['customer']['billing']['email'],
-        'first_name': decrypted_string['customer']['billing']['firstName'],
-        'full_name': decrypted_string['customer']['billing']['fullName'],
-        'last_name': decrypted_string['customer']['billing']['lastName'],
-    }))
+    for item in dictionary['lineItems']:
+        g.mysql.add(models.order_product(**{
+            'amount': item['accountAmount'],
+            'item_number': item['itemNo'],
+            'order': order,
+            'recurring': item['recurring'],
+            'shippable': item['shippable'],
+            'title': item['productTitle'],
+            'url': item['downloadUrl'],
+        }))
     g.mysql.commit()
     return ('', 204)

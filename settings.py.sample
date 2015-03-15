@@ -2,8 +2,9 @@
 
 from datetime import timedelta
 
-# CLICKBANK
-CLICKBANK_SECRET_KEY = ''
+# ClickBank
+
+CLICKBANK = ''
 
 # Flask
 
