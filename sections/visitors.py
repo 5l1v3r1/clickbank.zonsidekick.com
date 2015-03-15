@@ -3,7 +3,7 @@
 from hashlib import sha1
 
 from Crypto.Cipher import AES
-from flask import Blueprint, g, redirect, request, url_for
+from flask import abort, Blueprint, g, redirect, request, url_for
 from ujson import loads
 
 from modules import models
@@ -32,45 +32,53 @@ def instant_notification():
         ).strip()
         if ord(character) >= 32
     ]))
-    customer = g.mysql.query(models.customer).filter(email=dictionary['customer']['billing']['email']).first()
+    customer_billing = {}
+    try:
+        customer_billing = dictionary['customer']['billing']
+    except KeyError:
+        pass
+    email = customer_billing.get('email', '')
+    if not email:
+        abort(400)
+    customer = g.mysql.query(models.customer).filter(email=email).first()
     if not customer:
         customer = models.customer(**{
-            'address': dictionary['customer']['billing']['address'],
-            'email': dictionary['customer']['billing']['email'],
-            'first_name': dictionary['customer']['billing']['firstName'],
-            'full_name': dictionary['customer']['billing']['fullName'],
-            'last_name': dictionary['customer']['billing']['lastName'],
-            'phone_number': dictionary['customer']['billing']['phoneNumber'],
+            'address': customer_billing.get('address', ''),
+            'email': email,
+            'first_name': customer_billing.get('firstName', ''),
+            'full_name': customer_billing.get('fullName', ''),
+            'last_name': customer_billing.get('lastName', ''),
+            'phone_number': customer_billing.get('phoneNumber', ''),
         })
     g.mysql.add(customer)
     order = models.order(**{
-        'affiliate': dictionary['affiliate'],
-        'amounts_account': dictionary['totalAccountAmount'],
-        'amounts_order': dictionary['totalOrderAmount'],
-        'amounts_shipping': dictionary['totalShippingAmount'],
-        'amounts_tax': dictionary['totalTaxAmount'],
-        'currency': dictionary['currency'],
+        'affiliate': dictionary.get('affiliate', ''),
+        'amounts_account': dictionary.get('totalAccountAmount', 0.00),
+        'amounts_order': dictionary.get('totalOrderAmount', 0.00),
+        'amounts_shipping': dictionary.get('totalShippingAmount', 0.00),
+        'amounts_tax': dictionary.get('totalTaxAmount', 0.00),
+        'currency': dictionary.get('currency', ''),
         'customer': customer,
-        'language': dictionary['orderLanguage'],
-        'payment_method': dictionary['paymentMethod'],
-        'receipt': dictionary['receipt'],
-        'role': dictionary['role'],
-        'timestamp': dictionary['transactionTime'],
-        'tracking_codes': dictionary['trackingCodes'],
-        'type': dictionary['transactionType'],
-        'vendor': dictionary['vendor'],
-        'vendor_variables': dictionary['vendorVariables'],
+        'language': dictionary.get('orderLanguage', ''),
+        'payment_method': dictionary.get('paymentMethod', ''),
+        'receipt': dictionary.get('receipt', ''),
+        'role': dictionary.get('role', ''),
+        'timestamp': dictionary.get('transactionTime', ''),
+        'tracking_codes': dictionary.get('trackingCodes', []),
+        'type': dictionary.get('transactionType', ''),
+        'vendor': dictionary.get('vendor', ''),
+        'vendor_variables': dictionary.get('vendorVariables', {}),
     })
     g.mysql.add(order)
-    for item in dictionary['lineItems']:
+    for item in dictionary.get('lineItems', []):
         g.mysql.add(models.order_product(**{
-            'amount': item['accountAmount'],
-            'item_number': item['itemNo'],
+            'amount': item.get('accountAmount', 0.00),
+            'item_number': item.get('itemNo', ''),
             'order': order,
-            'recurring': item['recurring'],
-            'shippable': item['shippable'],
-            'title': item['productTitle'],
-            'url': item['downloadUrl'],
+            'recurring': item.get('recurring', ''),
+            'shippable': item.get('shippable', ''),
+            'title': item.get('productTitle', ''),
+            'url': item.get('downloadUrl', ''),
         }))
     g.mysql.commit()
     return ('', 204)
