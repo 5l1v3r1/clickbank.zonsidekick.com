@@ -1,6 +1,6 @@
-resources/assets/compressed.css
-resources/assets/compressed.js
-resources/assets/versions.json
+resources/assets/*
+!resources/assets/.gitkeep
 resources/stylesheets/all.css
-resources/vendor
+resources/vendors/*
+!resources/vendors/.gitkeep
 settings.py
