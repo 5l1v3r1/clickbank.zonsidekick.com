@@ -2,13 +2,15 @@
 
 from hashlib import sha1
 
+from aweber_api import AWeberAPI
 from Crypto.Cipher import AES
 from flask import abort, Blueprint, g, redirect, request, url_for
+from rollbar import report_exc_info
 from ujson import loads
 
 from modules import models
 
-from settings import CLICKBANK
+from settings import AWEBER, CLICKBANK
 
 blueprint = Blueprint('visitors', __name__)
 
@@ -32,24 +34,60 @@ def notify():
         ).strip()
         if ord(character) >= 32
     ]))
-    customer_billing = {}
+    billing = {}
     try:
-        customer_billing = dictionary['customer']['billing']
+        billing = dictionary['customer']['billing']
     except KeyError:
         pass
-    email = customer_billing.get('email', '')
+    email = billing.get('email', '')
     if not email:
         abort(500)
+    name = billing.get('fullName', '')
     customer = g.mysql.query(models.customer).filter(models.customer.email == email).first()
     if not customer:
         customer = models.customer(**{
-            'address': customer_billing.get('address', ''),
+            'address': billing.get('address', ''),
             'email': email,
-            'first_name': customer_billing.get('firstName', ''),
-            'full_name': customer_billing.get('fullName', ''),
-            'last_name': customer_billing.get('lastName', ''),
-            'phone_number': customer_billing.get('phoneNumber', ''),
+            'password': '',
+            'name': name,
+            'phone_number': billing.get('phoneNumber', ''),
+            'status': 'On',
         })
+        aweber = AWeberAPI(
+            AWEBER['consumer_key'], AWEBER['consumer_secret'],
+        ).get_account(
+            AWEBER['access_key'], AWEBER['access_secret'],
+        )
+        try:
+            aweber.load_from_url('/accounts/%(account_id)s/lists/%(list_id)s' % {
+                'account_id': AWEBER['account_id'],
+                'list_id': AWEBER['list_id'],
+            }).subscribers.create(**{
+                'email': email,
+                'name': name,
+            })
+        except Exception:
+            report_exc_info()
+            pass
+    type = dictionary.get('transactionType', '')
+    if type == 'SALE':
+        customer.status = 'On'
+    if type == 'RFND':
+        customer.status = 'Off'
+    if type == 'CGBK':
+        customer.status = 'Off'
+    if type == 'FEE':
+        customer.status = 'On'
+    if type == 'BILL':
+        customer.status = 'On'
+    if type == 'TEST_SALE':
+        customer.status = 'On'
+    if type == 'TEST_BILL':
+        customer.status = 'On'
+    if type == 'TEST_RFND':
+        customer.status = 'Off'
+    if type == 'TEST_FEE':
+        customer.status = 'On'
     g.mysql.add(customer)
     order = models.order(**{
         'affiliate': dictionary.get('affiliate', ''),
@@ -65,7 +103,7 @@ def notify():
         'role': dictionary.get('role', ''),
         'timestamp': dictionary.get('transactionTime', ''),
         'tracking_codes': dictionary.get('trackingCodes', []),
-        'type': dictionary.get('transactionType', ''),
+        'type': type,
         'vendor': dictionary.get('vendor', ''),
         'vendor_variables': dictionary.get('vendorVariables', {}),
     })

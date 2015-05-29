@@ -16,17 +16,17 @@ DROP TABLE IF EXISTS `customers`;
 CREATE TABLE IF NOT EXISTS `customers` (
     `id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
     `email` VARCHAR(255) COLLATE utf8_unicode_ci NOT NULL,
-    `full_name` VARCHAR(255) COLLATE utf8_unicode_ci NOT NULL,
-    `first_name` VARCHAR(255) COLLATE utf8_unicode_ci NOT NULL,
-    `last_name` VARCHAR(255) COLLATE utf8_unicode_ci NOT NULL,
-    `phone_number` VARCHAR(255) COLLATE utf8_unicode_ci NOT NULL,
+    `password` VARCHAR(255) COLLATE utf8_unicode_ci NOT NULL,
+    `name` VARCHAR(255) COLLATE utf8_unicode_ci NOT NULL,
     `address` TEXT COLLATE utf8_unicode_ci NOT NULL,
+    `phone_number` VARCHAR(255) COLLATE utf8_unicode_ci NOT NULL,
+    `status` VARCHAR(255) COLLATE utf8_unicode_ci NOT NULL,
     PRIMARY KEY (`id`),
     UNIQUE KEY `email` (`email`),
-    INDEX `full_name` (`full_name`),
-    INDEX `first_name` (`first_name`),
-    INDEX `last_name` (`last_name`),
-    INDEX `phone_number` (`phone_number`)
+    INDEX `password` (`password`),
+    INDEX `name` (`name`),
+    INDEX `phone_number` (`phone_number`),
+    INDEX `status` (`status`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=0;
 
 DROP TABLE IF EXISTS `orders`;

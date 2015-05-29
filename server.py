@@ -38,18 +38,24 @@ assets.manifest = 'json:assets/versions.json'
 assets.url = application.static_url_path
 assets.url_expire = True
 assets.versions = 'hash'
-assets.register('javascripts', Bundle(
-    'vendors/jquery/dist/jquery.js',
-    'vendors/bootstrap/dist/js/bootstrap.js',
-    'javascripts/all.js',
-    filters='rjsmin' if not application.config['DEBUG'] else None,
-    output='assets/compressed.js',
-))
-assets.register('stylesheets', Bundle(
-    Bundle('stylesheets/all.less', filters='less', output='stylesheets/all.css'),
-    filters='cssmin,cssrewrite'if not application.config['DEBUG'] else None,
-    output='assets/compressed.css',
-))
+assets.register(
+    'javascripts',
+    Bundle(
+        'vendors/jquery/dist/jquery.js',
+        'vendors/bootstrap/dist/js/bootstrap.js',
+        'javascripts/all.js',
+        filters='rjsmin' if not application.config['DEBUG'] else None,
+        output='assets/compressed.js',
+    )
+)
+assets.register(
+    'stylesheets',
+    Bundle(
+        Bundle('stylesheets/all.less', filters='less', output='stylesheets/all.css'),
+        filters='cssmin,cssrewrite'if not application.config['DEBUG'] else None,
+        output='assets/compressed.css',
+    )
+)
 
 
 @application.before_first_request

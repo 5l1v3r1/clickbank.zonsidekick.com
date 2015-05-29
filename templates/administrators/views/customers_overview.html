@@ -35,33 +35,43 @@
                                     'options': {},
                                 },
                                 order_by,
-                                'email',
-                                'Email',
+                                'name',
+                                'Name',
                                 ''
-                            )
-                        }}
-                        {{
-                            macros.th(
-                                {
-                                    'name': 'administrators.customers_process',
-                                    'options': {},
-                                },
-                                order_by,
-                                'full_name',
-                                'Full Name',
-                                'narrow'
                             )
                         }}
                         <th class="narrow text-right">Orders</th>
                         <th class="narrow text-right">Money Spent</th>
+                        <th class="narrow text-center">Status</th>
                     </tr>
                     {% for customer in customers %}
                         <tr>
                             <td class="narrow text-right">{{ customer.id }}</td>
-                            <td>{{ customer.email }}</td>
-                            <td class="narrow">{{ customer.full_name }}</td>
+                            <td>
+                                <a href="mailto:{{ customer.email }}" target="_blank">{{ customer.name }}</a>
+                            </td>
                             <td class="narrow text-right">{{ customer.orders.count()|format_integer }}</td>
                             <td class="narrow text-right">{{ customer.get_amount()|format_float }}</td>
+                            <td class="narrow text-center">
+                                {% if customer.status == 'On' %}
+                                    <a
+                                        class="btn btn-xs btn-success"
+                                        href="{{ url_for('administrators.customers_status', id=customer.id) }}"
+                                        >
+                                        <i class="icon-plus-sign"></i>
+                                        On
+                                    </a>
+                                {% endif %}
+                                {% if customer.status == 'Off' %}
+                                    <a
+                                        class="btn btn-xs btn-danger"
+                                        href="{{ url_for('administrators.customers_status', id=customer.id) }}"
+                                        >
+                                        <i class="icon-minus-sign"></i>
+                                        Off
+                                    </a>
+                                {% endif %}
+                            </td>
                         </tr>
                     {% endfor %}
                 </table>

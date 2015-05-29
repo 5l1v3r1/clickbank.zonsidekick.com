@@ -67,8 +67,8 @@ def customers_overview():
         'customers',
         {},
         {
-            'column': 'full_name',
-            'direction': 'asc',
+            'column': 'id',
+            'direction': 'desc',
         },
         10,
         1
@@ -92,6 +92,16 @@ def customers_process():
         utilities.set_order_by_limit_page('customers')
     if request.method == 'POST':
         utilities.set_filters('customers', filters.customers)
+    return redirect(url_for('administrators.customers_overview'))
+
+
+@blueprint.route('/customers/<int:id>/status')
+@decorators.requires_administrator
+def customers_status(id):
+    customer = g.mysql.query(models.customer).get(id)
+    customer.status = 'Off' if customer.status == 'On' else 'On'
+    g.mysql.add(customer)
+    g.mysql.commit()
     return redirect(url_for('administrators.customers_overview'))
 
 

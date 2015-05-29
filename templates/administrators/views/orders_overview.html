@@ -35,7 +35,7 @@
                                     'options': {},
                                 },
                                 order_by,
-                                'customers.full_name',
+                                'customers.name',
                                 'Customer',
                                 ''
                             )
@@ -105,15 +105,43 @@
                     {% for order in orders %}
                         <tr>
                             <td class="narrow text-right">{{ order.id }}</td>
-                            <td>{{ order.customer.full_name }} ({{ order.customer.email }})</td>
+                            <td>
+                                <a href="mailto:{{ order.customer.email }}" target="_blank">{{ order.customer.name }}</a>
+                            </td>
                             <td class="narrow text-right">{{ order.orders_products.count()|format_integer }}</td>
                             <td class="narrow">{{ order.receipt }}</td>
-                            <td class="narrow">{{ order.type }}</td>
-                            <td class="narrow">{{ order.role }} ( {{ order.get_role() }})</td>
-                            <td class="narrow">{{ order.payment_method }}</td>
-                            <td class="narrow text-center">
-                                {{ order.amounts_order|format_float }} {{ order.currency }}
+                            <td class="narrow">
+                                {% if order.type == 'SALE' %}
+                                    <span class="label label-success">{{ order.type }}</span>
+                                {% endif %}
+                                {% if order.type == 'RFND' %}
+                                    <span class="label label-danger">{{ order.type }}</span>
+                                {% endif %}
+                                {% if order.type == 'CGBK' %}
+                                    <span class="label label-danger">{{ order.type }}</span>
+                                {% endif %}
+                                {% if order.type == 'FEE' %}
+                                    <span class="label label-success">{{ order.type }}</span>
+                                {% endif %}
+                                {% if order.type == 'BILL' %}
+                                    <span class="label label-success">{{ order.type }}</span>
+                                {% endif %}
+                                {% if order.type == 'TEST_SALE' %}
+                                    <span class="label label-success">{{ order.type }}</span>
+                                {% endif %}
+                                {% if order.type == 'TEST_BILL' %}
+                                    <span class="label label-success">{{ order.type }}</span>
+                                {% endif %}
+                                {% if order.type == 'TEST_RFND' %}
+                                    <span class="label label-danger">{{ order.type }}</span>
+                                {% endif %}
+                                {% if order.type == 'TEST_FEE' %}
+                                    <span class="label label-success">{{ order.type }}</span>
+                                {% endif %}
                             </td>
+                            <td class="narrow">{{ order.role }} ({{ order.get_role() }})</td>
+                            <td class="narrow">{{ order.payment_method }}</td>
+                            <td class="narrow text-right">{{ order.amounts_order|format_float }}</td>
                         </tr>
                     {% endfor %}
                 </table>
