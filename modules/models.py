@@ -68,7 +68,7 @@ class mutators_list(Mutable, list):
 
 class setting(database.base):
 
-    __tablename__ = 'settings'
+    __tablename__ = 'clickbank_settings'
     __table_args__ = {
         'autoload': True,
     }
@@ -76,7 +76,7 @@ class setting(database.base):
 
 class customer(database.base):
 
-    __tablename__ = 'customers'
+    __tablename__ = 'clickbank_customers'
     __table_args__ = {
         'autoload': True,
     }
@@ -89,7 +89,7 @@ class customer(database.base):
 
 class order(database.base):
 
-    __tablename__ = 'orders'
+    __tablename__ = 'clickbank_orders'
     __table_args__ = {
         'autoload': True,
     }
@@ -107,7 +107,7 @@ class order(database.base):
 
 class order_product(database.base):
 
-    __tablename__ = 'orders_products'
+    __tablename__ = 'clickbank_orders_products'
     __table_args__ = {
         'autoload': True,
     }

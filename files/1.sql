@@ -1,7 +1,7 @@
 SET FOREIGN_KEY_CHECKS = 0;
 
-DROP TABLE IF EXISTS `settings`;
-CREATE TABLE IF NOT EXISTS `settings` (
+DROP TABLE IF EXISTS `clickbank_settings`;
+CREATE TABLE IF NOT EXISTS `clickbank_settings` (
     `id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
     `key` VARCHAR(255) COLLATE utf8_unicode_ci NOT NULL,
     `value` TEXT COLLATE utf8_unicode_ci NOT NULL,
@@ -9,11 +9,11 @@ CREATE TABLE IF NOT EXISTS `settings` (
     UNIQUE KEY `key` (`key`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=0;
 
-INSERT INTO `settings` (`id`, `key`, `value`) VALUES(1, 'username', 'admin');
-INSERT INTO `settings` (`id`, `key`, `value`) VALUES(2, 'password', '$2a$04$4xbJB1kfqs/B9tqzQRD1suugGSY877LkWwmx9EEm4emq6LMliWyny');
+INSERT INTO `clickbank_settings` (`id`, `key`, `value`) VALUES(1, 'username', 'admin');
+INSERT INTO `clickbank_settings` (`id`, `key`, `value`) VALUES(2, 'password', '$2a$04$4xbJB1kfqs/B9tqzQRD1suugGSY877LkWwmx9EEm4emq6LMliWyny');
 
-DROP TABLE IF EXISTS `customers`;
-CREATE TABLE IF NOT EXISTS `customers` (
+DROP TABLE IF EXISTS `clickbank_customers`;
+CREATE TABLE IF NOT EXISTS `clickbank_customers` (
     `id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
     `email` VARCHAR(255) COLLATE utf8_unicode_ci NOT NULL,
     `password` VARCHAR(255) COLLATE utf8_unicode_ci NOT NULL,
@@ -29,8 +29,8 @@ CREATE TABLE IF NOT EXISTS `customers` (
     INDEX `status` (`status`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=0;
 
-DROP TABLE IF EXISTS `orders`;
-CREATE TABLE IF NOT EXISTS `orders` (
+DROP TABLE IF EXISTS `clickbank_orders`;
+CREATE TABLE IF NOT EXISTS `clickbank_orders` (
     `id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
     `customer_id` INT(11) UNSIGNED NOT NULL,
     `receipt` VARCHAR(255) COLLATE utf8_unicode_ci NOT NULL,
@@ -49,7 +49,7 @@ CREATE TABLE IF NOT EXISTS `orders` (
     `amounts_tax` DECIMAL(20,2) UNSIGNED NOT NULL,
     `timestamp` DATETIME NOT NULL,
     PRIMARY KEY (`id`),
-    CONSTRAINT `orders_customer_id` FOREIGN KEY (`customer_id`) REFERENCES `customers` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT `orders_customer_id` FOREIGN KEY (`customer_id`) REFERENCES `clickbank_customers` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
     INDEX `receipt` (`receipt`),
     INDEX `type` (`type`),
     INDEX `role` (`role`),
@@ -65,8 +65,8 @@ CREATE TABLE IF NOT EXISTS `orders` (
     INDEX `timestamp` (`timestamp`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=0;
 
-DROP TABLE IF EXISTS `orders_products`;
-CREATE TABLE IF NOT EXISTS `orders_products` (
+DROP TABLE IF EXISTS `clickbank_orders_products`;
+CREATE TABLE IF NOT EXISTS `clickbank_orders_products` (
     `id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
     `order_id` INT(11) UNSIGNED NOT NULL,
     `item_number` INT(11) UNSIGNED NOT NULL,
@@ -76,7 +76,7 @@ CREATE TABLE IF NOT EXISTS `orders_products` (
     `shippable` BOOLEAN NOT NULL,
     `amount` DECIMAL(20,2) UNSIGNED NOT NULL,
     PRIMARY KEY (`id`),
-    CONSTRAINT `orders_products_order_id` FOREIGN KEY (`order_id`) REFERENCES `orders` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT `clickbank_orders_products_order_id` FOREIGN KEY (`order_id`) REFERENCES `clickbank_orders` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
     UNIQUE KEY `order_id_item_number` (`order_id`, `item_number`),
     INDEX `order_id` (`order_id`),
     INDEX `item_number` (`item_number`),

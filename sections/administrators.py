@@ -112,7 +112,7 @@ def orders_overview():
         'orders',
         {},
         {
-            'column': 'orders.timestamp',
+            'column': 'clickbank_orders.timestamp',
             'direction': 'desc',
         },
         10,
