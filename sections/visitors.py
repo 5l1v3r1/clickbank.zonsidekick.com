@@ -39,8 +39,8 @@ def instant_notification():
         pass
     email = customer_billing.get('email', '')
     if not email:
-        abort(400)
-    customer = g.mysql.query(models.customer).filter(email=email).first()
+        abort(500)
+    customer = g.mysql.query(models.customer).filter(models.customer.email=email).first()
     if not customer:
         customer = models.customer(**{
             'address': customer_billing.get('address', ''),

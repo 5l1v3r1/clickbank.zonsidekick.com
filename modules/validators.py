@@ -5,6 +5,7 @@ from wtforms.validators import DataRequired, StopValidation
 
 
 class required(DataRequired):
+
     field_flags = ('required', )
 
     def __call__(self, form, field):

@@ -8,6 +8,7 @@ from modules import models
 
 
 class customers(Form):
+
     email = TextField()
     full_name = TextField(label='Full Name')
 
@@ -32,6 +33,7 @@ class customers(Form):
 
 
 class orders(Form):
+
     customer = SelectField(choices=[], default='')
     receipt = TextField()
     type = TextField()

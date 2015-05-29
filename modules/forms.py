@@ -9,6 +9,7 @@ from modules import models, validators
 
 
 class sign_in(Form):
+
     username = TextField(validators=[validators.required()])
     password = PasswordField(validators=[validators.required()])
 
@@ -24,11 +25,12 @@ class sign_in(Form):
                 session['administrator'] = True
                 return True
         self.username.errors = ['Invalid Username/Password']
-        self.password.errors = []
+        self.password.errors = ['Invalid Username/Password']
         return False
 
 
 class settings(Form):
+
     username = TextField(validators=[validators.required()])
     password = PasswordField(validators=[validators.required()])
 
@@ -36,7 +38,6 @@ class settings(Form):
         g.mysql.query(models.setting).filter(models.setting.key == 'username').update({
             'value': self.username.data,
         })
-        g.mysql.commit()
         g.mysql.query(models.setting).filter(models.setting.key == 'password').update({
             'value': hashpw(self.password.data.encode('utf-8'), gensalt(10)),
         })
