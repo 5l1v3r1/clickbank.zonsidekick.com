@@ -19,7 +19,7 @@ def dashboard():
 
 
 @blueprint.route('/notify', methods=['POST'])
-def instant_notification():
+def notify():
     message = loads(request.data)
     algorithm = sha1()
     algorithm.update(CLICKBANK)
@@ -40,7 +40,7 @@ def instant_notification():
     email = customer_billing.get('email', '')
     if not email:
         abort(500)
-    customer = g.mysql.query(models.customer).filter(models.customer.email=email).first()
+    customer = g.mysql.query(models.customer).filter(models.customer.email == email).first()
     if not customer:
         customer = models.customer(**{
             'address': customer_billing.get('address', ''),

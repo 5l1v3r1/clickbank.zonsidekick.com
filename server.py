@@ -8,12 +8,9 @@ from flask.ext.assets import Bundle, Environment
 from rollbar import init
 from rollbar.contrib.flask import report_exception
 
-from modules import database
-from modules import utilities
+from modules import database, utilities
 
-from sections import administrators
-from sections import others
-from sections import visitors
+from sections import administrators, others, visitors
 
 from settings import ROLLBAR
 

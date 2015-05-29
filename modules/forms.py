@@ -18,8 +18,7 @@ class sign_in(Form):
             username = g.mysql.query(models.setting).filter(models.setting.key == 'username').first().value
             password = g.mysql.query(models.setting).filter(models.setting.key == 'password').first().value
             if (
-                username == self.username.data
-                and
+                username == self.username.data and
                 hashpw(self.password.data.encode('utf-8'), password.encode('utf-8')) == password
             ):
                 session['administrator'] = True
@@ -35,10 +34,18 @@ class settings(Form):
     password = PasswordField(validators=[validators.required()])
 
     def persist(self):
-        g.mysql.query(models.setting).filter(models.setting.key == 'username').update({
+        g.mysql.query(
+            models.setting,
+        ).filter(
+            models.setting.key == 'username',
+        ).update({
             'value': self.username.data,
         })
-        g.mysql.query(models.setting).filter(models.setting.key == 'password').update({
+        g.mysql.query(
+            models.setting,
+        ).filter(
+            models.setting.key == 'password',
+        ).update({
             'value': hashpw(self.password.data.encode('utf-8'), gensalt(10)),
         })
         g.mysql.commit()

@@ -39,8 +39,7 @@ def sign_out():
 @decorators.requires_administrator
 def settings():
     form = forms.settings(
-        request.form,
-        username=g.mysql.query(models.setting).filter(models.setting.key == 'username').first().value,
+        request.form, username=g.mysql.query(models.setting).filter(models.setting.key == 'username').first().value,
     )
     if request.method == 'POST':
         if form.validate_on_submit():
