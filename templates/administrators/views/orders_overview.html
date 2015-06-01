@@ -35,7 +35,7 @@
                                     'options': {},
                                 },
                                 order_by,
-                                'customers.name',
+                                'customers.display_name',
                                 'Customer',
                                 ''
                             )
@@ -106,7 +106,7 @@
                         <tr>
                             <td class="narrow text-right">{{ order.id }}</td>
                             <td>
-                                <a href="mailto:{{ order.customer.email }}" target="_blank">{{ order.customer.name }}</a>
+                                <a href="mailto:{{ order.customer.user_email }}" target="_blank">{{ order.customer.display_name }}</a>
                             </td>
                             <td class="narrow text-right">{{ order.orders_products.count()|format_integer }}</td>
                             <td class="narrow">{{ order.receipt }}</td>

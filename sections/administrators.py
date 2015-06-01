@@ -55,7 +55,9 @@ def settings():
 def dashboard():
     return render_template(
         'administrators/views/dashboard.html',
-        customers=utilities.get_integer(g.mysql.query(models.customer).count()),
+        customers=utilities.get_integer(
+            g.mysql.query(models.customer).filter(models.customer.ID.in_(models.get_customer_ids())).count()
+        ),
         orders=utilities.get_integer(g.mysql.query(models.order).count()),
     )
 
@@ -67,14 +69,14 @@ def customers_overview():
         'customers',
         {},
         {
-            'column': 'id',
+            'column': 'ID',
             'direction': 'desc',
         },
         10,
         1
     )
     form = filters.customers(**filters_)
-    query = form.apply(g.mysql.query(models.customer))
+    query = form.apply(g.mysql.query(models.customer).filter(models.customer.ID.in_(models.get_customer_ids())))
     pager = classes.pager(query.count(), limit, page)
     return render_template(
         'administrators/views/customers_overview.html',
@@ -99,7 +101,7 @@ def customers_process():
 @decorators.requires_administrator
 def customers_status(id):
     customer = g.mysql.query(models.customer).get(id)
-    customer.status = 'Off' if customer.status == 'On' else 'On'
+    customer.user_status = 0 if customer.user_status == 1 else 1
     g.mysql.add(customer)
     g.mysql.commit()
     return redirect(url_for('administrators.customers_overview'))

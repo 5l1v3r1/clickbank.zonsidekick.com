@@ -14,11 +14,11 @@ class customers(Form):
 
     def apply(self, query):
         if self.email.data:
-            query = query.filter(models.customer.email.like('%%%(email)s%%' % {
+            query = query.filter(models.customer.user_email.like('%%%(email)s%%' % {
                 'email': self.email.data,
             }))
         if self.name.data:
-            query = query.filter(models.customer.name.like('%%%(name)s%%' % {
+            query = query.filter(models.customer.display_name.like('%%%(name)s%%' % {
                 'name': self.name.data,
             }))
         return query
@@ -51,11 +51,19 @@ class orders(Form):
     def __init__(self, *args, **kwargs):
         super(orders, self).__init__(*args, **kwargs)
         self.customer.choices = [('', 'All')] + [
-            (customer.id, customer.name)
-            for customer in g.mysql.query(models.customer).order_by('id desc').all()
+            (customer.ID, customer.display_name)
+            for customer in g.mysql.query(
+                models.customer,
+            ).filter(
+                models.customer.ID.in_(models.get_customer_ids()),
+            ).order_by(
+                'ID desc',
+            ).all()
         ]
 
     def apply(self, query):
+        if self.customer.data:
+            query = query.filter(models.order.customer.ID == self.customer.data)
         if self.receipt.data:
             query = query.filter(models.order.receipt.like('%%%(receipt)s%%' % {
                 'receipt': self.receipt.data,

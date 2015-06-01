@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
-from sqlalchemy import Column
+from flask import g
+from sqlalchemy import BigInteger, Column, ForeignKey
 from sqlalchemy.ext.mutable import Mutable
 from sqlalchemy.orm import backref, relationship
 from sqlalchemy.types import TEXT, TypeDecorator
@@ -76,12 +77,12 @@ class setting(database.base):
 
 class customer(database.base):
 
-    __tablename__ = 'clickbank_customers'
+    __tablename__ = 'wp_users'
     __table_args__ = {
         'autoload': True,
     }
 
-    address = Column(mutators_dict.as_mutable(json))
+    ID = Column(BigInteger, autoincrement=True, primary_key=True)
 
     def get_amount(self):
         return sum([order.amounts_order for order in self.orders.order_by('timestamp DESC').all()])
@@ -93,6 +94,8 @@ class order(database.base):
     __table_args__ = {
         'autoload': True,
     }
+
+    customer_id = Column(BigInteger, ForeignKey('wp_users.ID'))
 
     customer = relationship('customer', backref=backref('orders', cascade='all,delete-orphan', lazy='dynamic'))
 
@@ -113,3 +116,7 @@ class order_product(database.base):
     }
 
     order = relationship('order', backref=backref('orders_products', cascade='all,delete-orphan', lazy='dynamic'))
+
+
+def get_customer_ids():
+    return [id for id, in g.mysql.query(order.customer_id).distinct().all()]

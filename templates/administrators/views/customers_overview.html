@@ -23,7 +23,7 @@
                                     'options': {},
                                 },
                                 order_by,
-                                'id',
+                                'ID',
                                 'ID',
                                 'narrow text-right'
                             )
@@ -35,7 +35,7 @@
                                     'options': {},
                                 },
                                 order_by,
-                                'name',
+                                'display_name',
                                 'Name',
                                 ''
                             )
@@ -46,26 +46,26 @@
                     </tr>
                     {% for customer in customers %}
                         <tr>
-                            <td class="narrow text-right">{{ customer.id }}</td>
+                            <td class="narrow text-right">{{ customer.ID }}</td>
                             <td>
-                                <a href="mailto:{{ customer.email }}" target="_blank">{{ customer.name }}</a>
+                                <a href="mailto:{{ customer.user_email }}" target="_blank">{{ customer.display_name }}</a>
                             </td>
                             <td class="narrow text-right">{{ customer.orders.count()|format_integer }}</td>
                             <td class="narrow text-right">{{ customer.get_amount()|format_float }}</td>
                             <td class="narrow text-center">
-                                {% if customer.status == 'On' %}
+                                {% if customer.user_status == 1 %}
                                     <a
                                         class="btn btn-xs btn-success"
-                                        href="{{ url_for('administrators.customers_status', id=customer.id) }}"
+                                        href="{{ url_for('administrators.customers_status', id=customer.ID) }}"
                                         >
                                         <i class="icon-plus-sign"></i>
                                         On
                                     </a>
                                 {% endif %}
-                                {% if customer.status == 'Off' %}
+                                {% if customer.user_status == 0 %}
                                     <a
                                         class="btn btn-xs btn-danger"
-                                        href="{{ url_for('administrators.customers_status', id=customer.id) }}"
+                                        href="{{ url_for('administrators.customers_status', id=customer.ID) }}"
                                         >
                                         <i class="icon-minus-sign"></i>
                                         Off

@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+from datetime import datetime
 from hashlib import sha1
 
 from aweber_api import AWeberAPI
@@ -43,15 +44,18 @@ def notify():
     if not email:
         abort(500)
     name = billing.get('fullName', '')
-    customer = g.mysql.query(models.customer).filter(models.customer.email == email).first()
+    customer = g.mysql.query(models.customer).filter(models.customer.user_email == email).first()
     if not customer:
         customer = models.customer(**{
-            'address': billing.get('address', ''),
-            'email': email,
-            'password': '',
-            'name': name,
-            'phone_number': billing.get('phoneNumber', ''),
-            'status': 'On',
+            'display_name': name,
+            'user_activation_key': '',
+            'user_email': email,
+            'user_login': email,
+            'user_nicename': name,
+            'user_pass': '',
+            'user_registered': datetime.now(),
+            'user_status': 1,
+            'user_url': '',
         })
         aweber = AWeberAPI(
             AWEBER['consumer_key'], AWEBER['consumer_secret'],
@@ -71,24 +75,26 @@ def notify():
             pass
     type = dictionary.get('transactionType', '')
     if type == 'SALE':
-        customer.status = 'On'
+        customer.user_status = 1
     if type == 'RFND':
-        customer.status = 'Off'
+        customer.user_status = 0
     if type == 'CGBK':
-        customer.status = 'Off'
+        customer.user_status = 0
     if type == 'FEE':
-        customer.status = 'On'
+        customer.user_status = 1
     if type == 'BILL':
-        customer.status = 'On'
+        customer.user_status = 1
     if type == 'TEST_SALE':
-        customer.status = 'On'
+        customer.user_status = 1
     if type == 'TEST_BILL':
-        customer.status = 'On'
+        customer.user_status = 1
     if type == 'TEST_RFND':
-        customer.status = 'Off'
+        customer.user_status = 0
     if type == 'TEST_FEE':
-        customer.status = 'On'
+        customer.user_status = 1
     g.mysql.add(customer)
+    g.mysql.commit()
+    g.mysql.refresh(customer)
     order = models.order(**{
         'affiliate': dictionary.get('affiliate', ''),
         'amounts_account': dictionary.get('totalAccountAmount', 0.00),
@@ -96,7 +102,7 @@ def notify():
         'amounts_shipping': dictionary.get('totalShippingAmount', 0.00),
         'amounts_tax': dictionary.get('totalTaxAmount', 0.00),
         'currency': dictionary.get('currency', ''),
-        'customer': customer,
+        'customer_id': customer.ID,
         'language': dictionary.get('orderLanguage', ''),
         'payment_method': dictionary.get('paymentMethod', ''),
         'receipt': dictionary.get('receipt', ''),

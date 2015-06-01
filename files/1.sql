@@ -12,27 +12,10 @@ CREATE TABLE IF NOT EXISTS `clickbank_settings` (
 INSERT INTO `clickbank_settings` (`id`, `key`, `value`) VALUES(1, 'username', 'admin');
 INSERT INTO `clickbank_settings` (`id`, `key`, `value`) VALUES(2, 'password', '$2a$04$4xbJB1kfqs/B9tqzQRD1suugGSY877LkWwmx9EEm4emq6LMliWyny');
 
-DROP TABLE IF EXISTS `clickbank_customers`;
-CREATE TABLE IF NOT EXISTS `clickbank_customers` (
-    `id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
-    `email` VARCHAR(255) COLLATE utf8_unicode_ci NOT NULL,
-    `password` VARCHAR(255) COLLATE utf8_unicode_ci NOT NULL,
-    `name` VARCHAR(255) COLLATE utf8_unicode_ci NOT NULL,
-    `address` TEXT COLLATE utf8_unicode_ci NOT NULL,
-    `phone_number` VARCHAR(255) COLLATE utf8_unicode_ci NOT NULL,
-    `status` VARCHAR(255) COLLATE utf8_unicode_ci NOT NULL,
-    PRIMARY KEY (`id`),
-    UNIQUE KEY `email` (`email`),
-    INDEX `password` (`password`),
-    INDEX `name` (`name`),
-    INDEX `phone_number` (`phone_number`),
-    INDEX `status` (`status`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=0;
-
 DROP TABLE IF EXISTS `clickbank_orders`;
 CREATE TABLE IF NOT EXISTS `clickbank_orders` (
     `id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
-    `customer_id` INT(11) UNSIGNED NOT NULL,
+    `customer_id` BIGINT(20) UNSIGNED NOT NULL,
     `receipt` VARCHAR(255) COLLATE utf8_unicode_ci NOT NULL,
     `type` VARCHAR(255) COLLATE utf8_unicode_ci NOT NULL,
     `role` VARCHAR(255) COLLATE utf8_unicode_ci NOT NULL,
@@ -49,7 +32,7 @@ CREATE TABLE IF NOT EXISTS `clickbank_orders` (
     `amounts_tax` DECIMAL(20,2) UNSIGNED NOT NULL,
     `timestamp` DATETIME NOT NULL,
     PRIMARY KEY (`id`),
-    CONSTRAINT `orders_customer_id` FOREIGN KEY (`customer_id`) REFERENCES `clickbank_customers` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+    INDEX `customer_id` (`customer_id`),
     INDEX `receipt` (`receipt`),
     INDEX `type` (`type`),
     INDEX `role` (`role`),
