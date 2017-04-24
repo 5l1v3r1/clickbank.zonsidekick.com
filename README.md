@@ -6,7 +6,7 @@ Step 1
 
 ```
 $ cd clickbank.zonsidekick.com
-$ git clone git@bitbucket.org:kalkura/clickbank.zonsidekick.com.git .
+$ git clone git@github.com:mahendrakalkura/clickbank.zonsidekick.com.git .
 $ cp settings.py.sample settings.py
 ```
 
